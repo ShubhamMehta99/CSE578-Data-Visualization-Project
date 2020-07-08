@@ -82,52 +82,21 @@ let lineChartFn = (x,y) => {
   })
 }
 
-let barChartFn = (xLabels,rating5,rating4,rating3,rating2,rating1) => {
-  console.log("Iam in here")
+let barChartFn = (xLabels,days) => {
   var myChart = new Chart(ctx, {
     type: 'bar',
     data: {
       labels: xLabels,
       datasets: [
         {
-          label: '1 Star',
-          data: rating1,
-          backgroundColor: '#003f5c'
-          
-        },
-        {
-          label: '2 Star',
-          data: rating2,
-          backgroundColor: '#58508d'
-          
-        },
-        {
-          label: '3 Star',
-          data: rating3,
-          backgroundColor: '#bc5090'
-         
-        },
-        
-        {
-          label: '4 Star',
-          data: rating4,
-          backgroundColor: '#ff6361'
-          
-        },
-        
-        {
-          label: '5 Star',
-          data: rating5,
-          backgroundColor: '#ffa600'
+          label: 'Check-ins',
+          data: days,
+          backgroundColor: '#756bb1'
           
         }
       ]
     },
     options: {
-      scales: {
-        xAxes: [{ stacked: true }],
-        yAxes: [{ stacked: true }]
-      },
       plugins: {
         zoom: {
           pan: {
@@ -278,33 +247,20 @@ function avgR(businessid){
 function stack(businessid){
 
   
-  d3.json("./data/review_summary_data.json", (function(data){
-    //if (error) throw error;
-    var unordered = data[businessid]
-    const ordered = {};
-    Object.keys(unordered).sort().forEach(function(key) {
-    ordered[key] = unordered[key];
-      });
-    console.log(ordered)
-    let fivStars = []
-    let frStars = []
-    let thStars = []
-    let twStars = []
-    let oneStars = []
-    let dats = []
-    for (var key in ordered) {
-      
-            dats.push(key)
-            fivStars.push(ordered[key]['5.0'])
-            frStars.push(ordered[key]['4.0'])
-            thStars.push(ordered[key]['3.0'])
-            twStars.push(ordered[key]['2.0'])
-            oneStars.push(ordered[key]['1.0'])
-         // console.log(key + " -> " + p[key]);
-      
-  }
-  //console.log(fivStars)
-  barChartFn(dats,fivStars,frStars,thStars,twStars,oneStars)
+  d3.json("./data/weekday_checkins_hash.json", (function(data){
+    var checkins = data[businessid]
+    console.log(checkins)
+    let days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday']
+    let sun = checkins['Sunday']
+    let mon = checkins['Monday']
+    let tues = checkins['Tuesday']
+    let weds = checkins['Wednesday']
+    let thurs = checkins['Thursday']
+    let fri = checkins['Friday']
+    let sat = checkins['Saturday']
+    let week = [sun, mon, tues, weds, thurs, fri, sat]
+  
+  barChartFn(days,week)
   }));
    
   
